@@ -44,6 +44,7 @@ func handle_shooting():
 # -------------------------------------------------------
 
 func use_power(attack_type: String):
+	print_debug("using power ", attack_type)
 	var power: ElementalPower = null
 
 	match attack_type:
@@ -61,13 +62,14 @@ func use_power(attack_type: String):
 		else power.get_heavy_attack(user, origin, target)
 	)
 
-	_execute_actions(actions, attack_type)
+	_execute_actions.rpc(actions, attack_type)
 
 
 # -------------------------------------------------------
 #   EXECUTION OF ABILITY ACTIONS
 # -------------------------------------------------------
 
+@rpc("any_peer","call_local")
 func _execute_actions(actions, attack_type: String):
 	if actions == null:
 		return

@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="WheelchairWizards2"
-run/main_scene="res://main.tscn"
+run/main_scene="uid://b6wrrb2g8t6ox"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="uid://c6145bv1xkgmx"
+
+[autoload]
+
+GameManager="*res://game_manager.gd"
 
 [global_group]
 

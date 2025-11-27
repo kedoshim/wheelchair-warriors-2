@@ -42,12 +42,13 @@ func _on_body_entered(_body: Node2D) -> void:
 
 
 func _on_area_entered(hitbox: Area2D) -> void:
-	var hitbox_owner = hitbox.get_parent()
-		
-	if healthComponent:
-		healthComponent.take_damage(hitbox.damage)
-		_blink_once()  # Chama a função de blink
-		$HurtSound.play()
+	if hitbox is HitboxComponent:
+		var hitbox_owner = hitbox.get_parent()
+			
+		if healthComponent:
+			healthComponent.take_damage(hitbox.damage)
+			_blink_once()  # Chama a função de blink
+			$HurtSound.play()
 		
 
 # Função que aplica o efeito de blink

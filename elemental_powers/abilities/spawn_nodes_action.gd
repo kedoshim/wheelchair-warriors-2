@@ -13,7 +13,8 @@ func add_delayed_spawn(node: Node, delay: float):
 func execute(shooting_component):
 	# Spawn immediate nodes
 	for n in immediate_nodes:
-		shooting_component.get_tree().current_scene.add_child(n)
+		var root : Window = shooting_component.get_tree().root
+		root.get_child(2).add_child(n)
 
 	# Spawn delayed nodes
 	for d in delayed_nodes:

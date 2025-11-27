@@ -75,6 +75,7 @@ height = 12.0
 [node name="IceShard" type="Area2D" groups=["Bullet"]]
 script = ExtResource("1_7o2di")
 speed = 300.0
+damage = 2
 max_ricochets = 1
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -82,7 +83,7 @@ texture_filter = 1
 scale = Vector2(0.47636923, 0.47636923)
 sprite_frames = SubResource("SpriteFrames_ugsrq")
 autoplay = "default"
-frame_progress = 0.7405577
+frame_progress = 0.0031952984
 
 [node name="HitboxComponent" parent="." instance=ExtResource("3_0blso")]
 deletable = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://bus1pf57a3are"]
+[gd_scene load_steps=47 format=3 uid="uid://bus1pf57a3are"]
 
 [ext_resource type="Texture2D" uid="uid://dfafn3siskmfl" path="res://assets/sprites/knight.png" id="1_0isxx"]
 [ext_resource type="Script" uid="uid://bsmhbwiw47ulw" path="res://wizard.gd" id="1_xxhrx"]
@@ -292,6 +292,11 @@ animations = [{
 radius = 6.0
 height = 18.0
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_74p71"]
+properties/0/path = NodePath(".:syncPos")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="Wizard" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_xxhrx")
 
@@ -333,3 +338,6 @@ inventory = NodePath("../InventoryComponent")
 
 [node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("8_2tmfn")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_74p71")

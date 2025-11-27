@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="IceElement" load_steps=3 format=3 uid="uid://c6ld5e40u50ns"]
+
+[ext_resource type="PackedScene" uid="uid://b6dhs23ickby2" path="res://elemental_powers/projectille_scenes/ice_shard.tscn" id="1_usceq"]
+[ext_resource type="Script" uid="uid://bguh66wxd67en" path="res://elemental_powers/elements/ice_element.gd" id="2_psc10"]
+
+[resource]
+script = ExtResource("2_psc10")
+metadata/_custom_type_script = "uid://bguh66wxd67en"

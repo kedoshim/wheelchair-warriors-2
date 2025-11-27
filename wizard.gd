@@ -33,7 +33,13 @@ var can_wall_jump := false
 var input_buffered := false
 var facing := 1 # 1 = direita, -1 = esquerda (default: direita)
 
+# --- SINCRONIZADORES ---
+var syncPos: Vector2
+var syncRot: = 0
+
 func _ready():
+	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
+	
 	jump_buffer.wait_time = JUMP_BUFFER_TIME
 	
 	if inventory:
@@ -45,11 +51,18 @@ func _ready():
 			inventory.passive_power = passive
 
 func _physics_process(delta: float) -> void:
-	handle_gravity(delta)
-	handle_input()
-	handle_movement(delta)
-	handle_animations()
-	move_and_slide()
+	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():		
+		handle_gravity(delta)
+		handle_input()
+		handle_movement(delta)
+		handle_animations()
+		move_and_slide()
+		
+		syncPos = global_position
+		syncRot = $ShootingComponent.rotation_degrees
+	else:
+		global_position = global_position.lerp(syncPos,.5)
+		$ShootingComponent.rotation_degrees = lerpf($ShootingComponent.rotation_degrees,syncRot,0.5)
 
 func handle_gravity(delta):
 	if not is_on_floor():
