@@ -4,7 +4,7 @@ extends Control
 @export var _port = 8910
 
 var address
-var port
+var port 
 var peer
 
 var compression_method = ENetConnection.COMPRESS_RANGE_CODER

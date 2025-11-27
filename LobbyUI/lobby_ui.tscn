@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmcbgclm3lono"]
+
+[ext_resource type="Script" uid="uid://b1c8a0ubbqgbe" path="res://LobbyUI/lobby_ui.gd" id="1_bqinw"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bqinw")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 462.0
+offset_top = 223.0
+offset_right = 713.0
+offset_bottom = 277.0
+text = "Create Room"
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 114.0
+offset_right = 860.0
+offset_bottom = 188.0
+placeholder_text = "Username"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 269.0
+offset_top = 141.0
+offset_right = 316.0
+offset_bottom = 164.0
+text = "Name"
+
+[node name="CreateRoomRequest" type="HTTPRequest" parent="."]
+use_threads = true
+timeout = 4.0
+
+[connection signal="button_down" from="Button" to="." method="create_room"]
+[connection signal="text_changed" from="LineEdit" to="." method="_on_line_edit_text_changed"]
