@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbpi1uvx0kk2f"]
+
+[ext_resource type="Script" uid="uid://6x27bqopr1tf" path="res://elemental_powers/elements/fire_element.gd" id="1_ne5w8"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_ne5w8")
