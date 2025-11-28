@@ -5,16 +5,7 @@ var username: String = ""
 @onready var http := $CreateRoomRequest
 
 func _ready():
-	var url = "http://localhost:3000/rooms/create"
-	var data = {
-		"nome": "Gustavo",
-		"score": 100
-	}
-
-	var headers = ["Content-Type: application/json"]
-	var json_data = JSON.stringify(data)
-
-	http.request(url, headers, HTTPClient.METHOD_POST, json_data)
+	
 	http.request_completed.connect(_on_request_completed)
 
 func _on_request_completed(result, response_code, headers, body):
@@ -32,4 +23,11 @@ func _on_line_edit_text_changed(new_text: String) -> void:
 
 
 func create_room() -> void:
-	pass # Replace with function body.
+	var url = "http://localhost:3000/rooms/create"
+
+	var headers = ["Content-Type: application/json"]
+	var json_data = JSON.new().stringify({
+		"username": username,
+	})
+
+	http.request(url, headers, HTTPClient.METHOD_POST, json_data)
