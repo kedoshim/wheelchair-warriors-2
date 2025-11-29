@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://je1e62lkoov4"]
 
-[ext_resource type="Script" uid="uid://cwxn8nybk1et2" path="res://components/shooting_component.gd" id="1_nctjf"]
+[ext_resource type="Script" uid="uid://cwxn8nybk1et2" path="res://components/shooting_manager_component.gd" id="1_nctjf"]
 [ext_resource type="Texture2D" uid="uid://cs0tom48ejrl7" path="res://assets/sprites/aim.png" id="2_rv0yp"]
 
-[node name="ShootingComponent" type="Node2D"]
+[node name="ShootingManager" type="Node2D"]
 script = ExtResource("1_nctjf")
 
 [node name="Marker2D" type="Marker2D" parent="."]

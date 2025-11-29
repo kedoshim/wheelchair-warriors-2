@@ -1,10 +1,11 @@
-[gd_scene load_steps=47 format=3 uid="uid://bus1pf57a3are"]
+[gd_scene load_steps=48 format=3 uid="uid://bus1pf57a3are"]
 
 [ext_resource type="Texture2D" uid="uid://dfafn3siskmfl" path="res://assets/sprites/knight.png" id="1_0isxx"]
 [ext_resource type="Script" uid="uid://bsmhbwiw47ulw" path="res://wizard.gd" id="1_xxhrx"]
+[ext_resource type="PackedScene" uid="uid://b8qcibifqdvbx" path="res://components/input_handler_component.tscn" id="2_2tmfn"]
 [ext_resource type="PackedScene" uid="uid://dcvapvcrjnb6t" path="res://components/health_component.tscn" id="3_xo1iy"]
 [ext_resource type="PackedScene" uid="uid://b2wpshvikyg7k" path="res://components/hurtbox_component.tscn" id="4_wsbrn"]
-[ext_resource type="PackedScene" uid="uid://je1e62lkoov4" path="res://components/shooting_component.tscn" id="5_wsbrn"]
+[ext_resource type="PackedScene" uid="uid://je1e62lkoov4" path="res://components/shooting_manager_component.tscn" id="5_wsbrn"]
 [ext_resource type="PackedScene" uid="uid://b1bwrv6bltw1" path="res://components/inventory_component.tscn" id="6_rsvjg"]
 [ext_resource type="AudioStream" uid="uid://bu3pptlwlg5j8" path="res://assets/sounds/jump.wav" id="8_2tmfn"]
 
@@ -296,9 +297,20 @@ height = 18.0
 properties/0/path = NodePath(".:syncPos")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath(".:syncRot")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("AnimatedSprite2D:animation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("AnimatedSprite2D:flip_h")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [node name="Wizard" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_xxhrx")
+
+[node name="InputHandler" parent="." instance=ExtResource("2_2tmfn")]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -321,20 +333,20 @@ target_position = Vector2(-12, 0)
 position = Vector2(0, 4)
 target_position = Vector2(12, 0)
 
-[node name="HealthComponent" parent="." instance=ExtResource("3_xo1iy")]
+[node name="Health" parent="." instance=ExtResource("3_xo1iy")]
 
-[node name="HurtboxComponent" parent="." node_paths=PackedStringArray("healthComponent") instance=ExtResource("4_wsbrn")]
-healthComponent = NodePath("../HealthComponent")
+[node name="Hurtbox" parent="." node_paths=PackedStringArray("healthComponent") instance=ExtResource("4_wsbrn")]
+healthComponent = NodePath("../Health")
 
-[node name="Collision" type="CollisionShape2D" parent="HurtboxComponent"]
+[node name="Collision" type="CollisionShape2D" parent="Hurtbox"]
 position = Vector2(0, 4)
 shape = SubResource("CapsuleShape2D_xxhrx")
 
-[node name="ShootingComponent" parent="." node_paths=PackedStringArray("inventory") instance=ExtResource("5_wsbrn")]
+[node name="ShootingManager" parent="." node_paths=PackedStringArray("inventory") instance=ExtResource("5_wsbrn")]
 position = Vector2(0, 4)
-inventory = NodePath("../InventoryComponent")
+inventory = NodePath("../Inventory")
 
-[node name="InventoryComponent" parent="." instance=ExtResource("6_rsvjg")]
+[node name="Inventory" parent="." instance=ExtResource("6_rsvjg")]
 
 [node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("8_2tmfn")

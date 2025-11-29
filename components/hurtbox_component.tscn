@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c44b5v7goddip" path="res://components/hurtbox_component.gd" id="1_mjwml"]
 [ext_resource type="AudioStream" uid="uid://byudcml5w3sgk" path="res://assets/sounds/hurt.wav" id="2_8jj4i"]
 
-[node name="HurtboxComponent" type="Area2D"]
+[node name="Hurtbox" type="Area2D"]
 script = ExtResource("1_mjwml")
 
 [node name="HurtSound" type="AudioStreamPlayer2D" parent="."]

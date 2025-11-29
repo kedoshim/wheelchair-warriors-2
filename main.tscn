@@ -1,14 +1,19 @@
-[gd_scene load_steps=12 format=4 uid="uid://beyx4ong3315r"]
+[gd_scene load_steps=14 format=4 uid="uid://beyx4ong3315r"]
 
 [ext_resource type="Texture2D" uid="uid://cbfg0nd0y3jcr" path="res://assets/sprites/platforms.png" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://dvi0lexg4sevb" path="res://scene_manager.gd" id="1_5vw27"]
 [ext_resource type="Texture2D" uid="uid://s61t6fofqmmo" path="res://assets/sprites/world_tileset.png" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://b6dhs23ickby2" path="res://elemental_powers/projectille_scenes/ice_shard.tscn" id="3_5vw27"]
 [ext_resource type="Script" uid="uid://6x27bqopr1tf" path="res://elemental_powers/elements/fire_element.gd" id="3_7mycd"]
-[ext_resource type="Resource" uid="uid://c6ld5e40u50ns" path="res://elemental_powers/ice.tres" id="3_272bh"]
 [ext_resource type="PackedScene" uid="uid://bus1pf57a3are" path="res://wizard.tscn" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://bguh66wxd67en" path="res://elemental_powers/elements/ice_element.gd" id="4_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bv0343iws4iah" path="res://elemental_powers/projectille_scenes/fireball.tscn" id="4_kek77"]
 
-[sub_resource type="Resource" id="Resource_lquwl"]
+[sub_resource type="Resource" id="Resource_efxa6"]
+script = ExtResource("4_4c57u")
+metadata/_custom_type_script = "uid://bguh66wxd67en"
+
+[sub_resource type="Resource" id="Resource_272bh"]
 script = ExtResource("3_7mycd")
 metadata/_custom_type_script = "uid://6x27bqopr1tf"
 
@@ -193,18 +198,14 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_1bvp3")
 sources/1 = SubResource("TileSetAtlasSource_lquwl")
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" groups=["PlayingLevel"]]
 script = ExtResource("1_5vw27")
 PlayerScene = ExtResource("3_h2yge")
-light_attack = ExtResource("3_272bh")
+light_attack = SubResource("Resource_efxa6")
+heavy_attack = SubResource("Resource_272bh")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2.71, 2.71)
-
-[node name="Wizard" parent="." instance=ExtResource("3_h2yge")]
-position = Vector2(-125, -186)
-light_attack = ExtResource("3_272bh")
-heavy_attack = SubResource("Resource_lquwl")
 
 [node name="Layer0" type="TileMapLayer" parent="."]
 use_parent_material = true

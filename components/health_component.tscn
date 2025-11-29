@@ -2,6 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cva3re14pq1g0" path="res://components/health_component.gd" id="1_n21r7"]
 
-[node name="HealthComponent" type="Node"]
+[node name="Health" type="Node"]
 script = ExtResource("1_n21r7")
 max_health = 100
