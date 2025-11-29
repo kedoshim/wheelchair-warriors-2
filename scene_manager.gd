@@ -7,10 +7,22 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	var camera = Camera2D.new()
+	camera.position = Vector2(0,0)
+	camera.zoom.x = 2.71
+	camera.zoom.y = 2.71
+	
 	var index = 0
 	for i in GameManager.players:
 		var currentPlayer: Wizard = PlayerScene.instantiate()
-		currentPlayer.name = str(GameManager.players[i].id)
+		var player_id = GameManager.players[i].id
+		
+		currentPlayer.name = str(player_id)
+		
+		if player_id == multiplayer.get_unique_id():
+			currentPlayer.add_child(camera)
+		
 		currentPlayer.light_attack = light_attack
 		currentPlayer.heavy_attack = heavy_attack
 		add_child(currentPlayer)
