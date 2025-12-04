@@ -311,6 +311,7 @@ properties/3/replication_mode = 1
 script = ExtResource("1_xxhrx")
 
 [node name="InputHandler" parent="." instance=ExtResource("2_2tmfn")]
+active = false
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -327,13 +328,14 @@ shape = SubResource("CapsuleShape2D_xxhrx")
 
 [node name="wall_check_left" type="RayCast2D" parent="."]
 position = Vector2(0, 4)
-target_position = Vector2(-12, 0)
+target_position = Vector2(-7, 0)
 
 [node name="wall_check_right" type="RayCast2D" parent="."]
 position = Vector2(0, 4)
-target_position = Vector2(12, 0)
+target_position = Vector2(7, 0)
 
 [node name="Health" parent="." instance=ExtResource("3_xo1iy")]
+max_health = 5
 
 [node name="Hurtbox" parent="." node_paths=PackedStringArray("healthComponent") instance=ExtResource("4_wsbrn")]
 healthComponent = NodePath("../Health")
@@ -353,3 +355,8 @@ stream = ExtResource("8_2tmfn")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_74p71")
+
+[node name="InvulnerabilityTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_invulnerability_timer_timeout"]

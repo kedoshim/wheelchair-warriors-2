@@ -16,12 +16,17 @@ var jump_timer := 0.0
 
 var using_controller := false
 
+@export var active := true
+
 
 func _ready():
 	Input.set_use_accumulated_input(false)
 
 
 func _process(delta):
+	if not active:
+		return
+	
 	_read_movement()
 	_read_jump(delta)
 	_read_attacks()
@@ -56,10 +61,10 @@ func _read_jump(delta):
 # ATAQUES (sinais)
 # ---------------------------------------------------------
 func _read_attacks():
-	if Input.is_action_just_pressed("shoot_light"):
+	if Input.is_action_just_pressed("shoot_light") and get_window().has_focus():
 		light_pressed.emit()
 
-	if Input.is_action_just_pressed("shoot_heavy"):
+	if Input.is_action_just_pressed("shoot_heavy") and get_window().has_focus():
 		heavy_pressed.emit()
 
 

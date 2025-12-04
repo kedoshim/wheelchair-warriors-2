@@ -9,6 +9,8 @@ class_name HurtboxComponent
 # Variável para referenciar o sprite
 @export var sprite : AnimatedSprite2D  # Ajuste o caminho conforme necessário
 
+@export var is_invulnerable : bool
+
 var old_modulate_value
 
 var is_being_captured: bool = false
@@ -23,25 +25,28 @@ func _process(_delta: float) -> void:
 	pass
 
 
-func _on_body_entered(_body: Node2D) -> void:
-	pass
-	#if body.is_in_group('ThrowingBall') and CapturableComponent:
-		#var thrower = body.get_parent()
-		#
-		#capturableComponent.try_to_capture(thrower)
-		#
-		##body.queue_free()
-		##get_parent().queue_free()
-		#
-		#
-	#if body.is_in_group('Bullet') and HealthComponent:
-		#
-		#healthComponent.take_damage(body.damage)
-		#
-		#get_parent().queue_free()
+func _on_body_entered(body: Node2D) -> void:
+	if is_invulnerable:
+		return
+	if body.is_in_group('Bullet') and HealthComponent:
+		print("entrou")
+		
+		healthComponent.take_damage(body.damage)
+		
+		get_parent().queue_free()
 
 
 func _on_area_entered(hitbox: Area2D) -> void:
+	if is_invulnerable:
+		return
+		
+	if hitbox.is_in_group('Bullet') and HealthComponent:
+		
+		var hitbox_component: HitboxComponent = hitbox.get_node("HitboxComponent")
+
+		if hitbox_component:
+			healthComponent.take_damage(hitbox_component.damage)
+		
 	if hitbox is HitboxComponent:
 		var hitbox_owner = hitbox.get_parent()
 			

@@ -17,29 +17,88 @@ func _ready():
 
 
 func update_aim(aim_vector: Vector2):
-	# origem do disparo
 	origin = $Marker2D.global_position
-
-	# destino baseado no vetor de mira externo
 	target = origin + (aim_vector.normalized() * max_aim_distance)
-
-	# gira o jogador para mirar corretamente
 	look_at(target)
 
 
+# ============================================================
+# PUBLIC SHOOT REQUESTS (CLIENT SIDE)
+# ============================================================
+
 func shoot_light():
 	if not light_cooldown:
-		use_power("light")
+		request_use_power("light")
 
 
 func shoot_heavy():
 	if not heavy_cooldown:
-		use_power("heavy")
+		request_use_power("heavy")
 
 
-func use_power(attack_type: String):
-	#print_debug("using power ", attack_type)
+func request_use_power(attack_type: String):
+	print_debug("origin ", origin)
+	# Se servidor → executa direto
+	if multiplayer.is_server():
+		_server_use_power(attack_type, origin, target)
+	else:
+		# Cliente → envia RPC para o servidor
+		rpc_id(1, "server_use_power", attack_type, origin, target)
+	
 
+# ============================================================
+# RPC: SERVER RECEBE O PEDIDO DE TIRO
+# ============================================================
+
+@rpc("any_peer")
+func server_use_power(attack_type: String, origin_pos: Vector2, target_pos: Vector2):
+	if not multiplayer.is_server():
+		return
+
+	_server_use_power(attack_type, origin_pos, target_pos)
+
+
+func _server_use_power(attack_type, origin_pos, target_pos):
+	if target_pos == Vector2(0,0) and origin_pos == Vector2(0,0):
+		return
+		
+	var power: ElementalPower = null
+
+	match attack_type:
+		"light":
+			if light_cooldown: return
+			power = inventory.light_attack_power
+
+		"heavy":
+			if heavy_cooldown: return
+			power = inventory.heavy_attack_power
+
+	if not power:
+		return
+
+	# Gera a lista de ações no servidor
+	var actions = (
+		power.get_light_attack(user, origin_pos, target_pos)
+		if attack_type == "light"
+		else power.get_heavy_attack(user, origin_pos, target_pos)
+	)
+
+	_execute_actions(actions, attack_type)
+
+	# Replica visualmente/funcionalmente para todos os clientes
+	rpc("client_replicate_action", attack_type, origin_pos, target_pos)
+
+
+# ============================================================
+# CLIENT EXECUTES VISUAL COPY OF THE SERVER ACTION
+# ============================================================
+
+@rpc("call_remote")
+func client_replicate_action(attack_type: String, origin_pos: Vector2, target_pos: Vector2):
+	if multiplayer.is_server():
+		return  # servidor já executou a ação real
+
+	# Criar versão visual local
 	var power: ElementalPower = null
 
 	match attack_type:
@@ -52,17 +111,19 @@ func use_power(attack_type: String):
 		return
 
 	var actions = (
-		power.get_light_attack(user, origin, target)
+		power.get_light_attack(user, origin_pos, target_pos)
 		if attack_type == "light"
-		else power.get_heavy_attack(user, origin, target)
+		else power.get_heavy_attack(user, origin_pos, target_pos)
 	)
 
-	_execute_actions.rpc(actions, attack_type)
+	_execute_actions(actions, attack_type)
 
 
-@rpc("any_peer", "call_local")
+# ============================================================
+# ACTION EXECUTION
+# ============================================================
+
 func _execute_actions(actions, attack_type: String):
-	print_debug("executing action for player ", multiplayer.get_unique_id())
 	if actions == null:
 		return
 
@@ -77,6 +138,10 @@ func _execute_actions(actions, attack_type: String):
 func add_to_world(node: Node):
 	get_tree().current_scene.add_child(node)
 
+
+# ============================================================
+# TIMERS / COOLDOWNS
+# ============================================================
 
 func add_timer(duration: float, callback: Callable) -> Timer:
 	var t := Timer.new()

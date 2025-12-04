@@ -22,6 +22,7 @@ const MAX_FALL_SPEED := 900
 @onready var shooting: ShootingManagerComponent = $ShootingManager
 @onready var inventory: Inventory = $Inventory
 
+
 # ---------------------------------------------------------
 # POWERS
 # ---------------------------------------------------------
@@ -29,6 +30,15 @@ const MAX_FALL_SPEED := 900
 @export var light_attack: ElementalPower
 @export var heavy_attack: ElementalPower
 @export var passive: ElementalPower
+
+
+# ---------------------------------------------------------
+# Configs
+# ---------------------------------------------------------
+@export var spawn_invulnerability_time := 2.0 # seconds
+
+var is_invulnerable := false
+@onready var invul_timer: Timer = $InvulnerabilityTimer
 
 # ---------------------------------------------------------
 # VARIÁVEIS
@@ -48,6 +58,9 @@ var syncRot := 0.0
 # =========================================================
 func _ready():
 	$MultiplayerSynchronizer.set_multiplayer_authority(str(name).to_int())
+	
+	# Start invulnerability
+	become_invulnerable(spawn_invulnerability_time)
 
 	jump_buffer.wait_time = JUMP_BUFFER_TIME
 
@@ -88,12 +101,12 @@ func _physics_process(delta: float) -> void:
 
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
 
+		handle_aim()
 		handle_gravity(delta)
 		handle_platform_drop()
 		handle_movement(delta)
 		handle_jump_buffer_logic()
 		handle_animations()
-		handle_aim()
 
 		move_and_slide()
 
@@ -183,6 +196,39 @@ func handle_aim():
 	var target = input.aim_vector
 	if shooting_manager:
 		shooting_manager.update_aim(target)
+
+
+func become_invulnerable(duration: float):
+	var hurtbox_component: HurtboxComponent = $Hurtbox
+	if hurtbox_component:
+		hurtbox_component.is_invulnerable = true
+	invul_timer.start(duration)
+	flicker_effect(true)
+	
+func _on_invulnerability_timer_timeout():
+	input.active = true
+	var hurtbox_component: HurtboxComponent = $Hurtbox
+	if hurtbox_component:
+		hurtbox_component.is_invulnerable = false
+	flicker_effect(false)
+	modulate = Color(1, 1, 1, 1) # restore normal appearance
+
+var flicker_tween: Tween
+
+func flicker_effect(active: bool):
+	if active:
+		if flicker_tween and flicker_tween.is_running():
+			flicker_tween.kill()
+			
+		flicker_tween = create_tween()
+		flicker_tween.set_loops() # infinite until stopped
+		
+		flicker_tween.tween_property(self, "modulate:a", 0.3, 0.1)
+		flicker_tween.tween_property(self, "modulate:a", 1.0, 0.1)
+	else:	
+		if flicker_tween:
+			flicker_tween.kill()
+	modulate = Color(1, 1, 1, 1)
 
 
 # =========================================================

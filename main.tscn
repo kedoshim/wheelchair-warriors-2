@@ -215,10 +215,10 @@ use_kinematic_bodies = true
 [node name="SpawnPoints" type="Node" parent="Layer0"]
 
 [node name="0" type="Node2D" parent="Layer0/SpawnPoints" groups=["PlayerSpawnPoint"]]
-position = Vector2(87, -9)
+position = Vector2(-152, 23)
 
 [node name="1" type="Node2D" parent="Layer0/SpawnPoints" groups=["PlayerSpawnPoint"]]
-position = Vector2(-152, 23)
+position = Vector2(87, -9)
 
 [node name="2" type="Node2D" parent="Layer0/SpawnPoints" groups=["PlayerSpawnPoint"]]
 position = Vector2(-87, -56)
