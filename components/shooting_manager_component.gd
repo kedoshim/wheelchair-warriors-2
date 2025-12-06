@@ -37,7 +37,6 @@ func shoot_heavy():
 
 
 func request_use_power(attack_type: String):
-	print_debug("origin ", origin)
 	# Se servidor → executa direto
 	if multiplayer.is_server():
 		_server_use_power(attack_type, origin, target)

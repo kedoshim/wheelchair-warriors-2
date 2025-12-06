@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://beyx4ong3315r"]
+[gd_scene load_steps=15 format=4 uid="uid://beyx4ong3315r"]
 
 [ext_resource type="Texture2D" uid="uid://cbfg0nd0y3jcr" path="res://assets/sprites/platforms.png" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://dvi0lexg4sevb" path="res://scene_manager.gd" id="1_5vw27"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bus1pf57a3are" path="res://wizard.tscn" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://bguh66wxd67en" path="res://elemental_powers/elements/ice_element.gd" id="4_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bv0343iws4iah" path="res://elemental_powers/projectille_scenes/fireball.tscn" id="4_kek77"]
+[ext_resource type="PackedScene" uid="uid://cwf44lxlb2sa3" path="res://respawn_ui.tscn" id="9_kek77"]
 
 [sub_resource type="Resource" id="Resource_efxa6"]
 script = ExtResource("4_4c57u")
@@ -198,9 +199,11 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_1bvp3")
 sources/1 = SubResource("TileSetAtlasSource_lquwl")
 
-[node name="Main" type="Node2D" groups=["PlayingLevel"]]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("default_camera", "respawn_ui") groups=["PlayingLevel"]]
 script = ExtResource("1_5vw27")
 PlayerScene = ExtResource("3_h2yge")
+default_camera = NodePath("DefaultCamera")
+respawn_ui = NodePath("RespawnUI")
 light_attack = SubResource("Resource_efxa6")
 heavy_attack = SubResource("Resource_272bh")
 
@@ -225,3 +228,9 @@ position = Vector2(-87, -56)
 
 [node name="3" type="Node2D" parent="Layer0/SpawnPoints" groups=["PlayerSpawnPoint"]]
 position = Vector2(153, 56)
+
+[node name="DefaultCamera" type="Camera2D" parent="."]
+enabled = false
+zoom = Vector2(2.255, 2.255)
+
+[node name="RespawnUI" parent="." instance=ExtResource("9_kek77")]

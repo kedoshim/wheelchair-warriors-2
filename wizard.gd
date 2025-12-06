@@ -21,6 +21,8 @@ const MAX_FALL_SPEED := 900
 @onready var input: InputHandler = $InputHandler
 @onready var shooting: ShootingManagerComponent = $ShootingManager
 @onready var inventory: Inventory = $Inventory
+@onready var health: HealthComponent = $Health
+
 
 
 # ---------------------------------------------------------
@@ -30,6 +32,9 @@ const MAX_FALL_SPEED := 900
 @export var light_attack: ElementalPower
 @export var heavy_attack: ElementalPower
 @export var passive: ElementalPower
+
+
+@export var camera: Camera2D
 
 
 # ---------------------------------------------------------

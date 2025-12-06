@@ -34,7 +34,7 @@ func host_game():
 	print("Waiting For Players!")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 # this gets called on the server AND clients
@@ -55,10 +55,10 @@ func connection_failed():
 	print("Connection Failed")
 	
 @rpc("any_peer")
-func send_player_information(name,id):
+func send_player_information(player_name,id):
 	if !GameManager.players.has(id):
 		GameManager.players[id] = {
-			"name": name,
+			"name": player_name,
 			"id": id,
 			"score" : 0
 		}
