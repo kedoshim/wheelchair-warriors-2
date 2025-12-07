@@ -25,7 +25,11 @@ func _ready() -> void:
 
 	for i in GameManager.players:
 		var player_id = GameManager.players[i].id
+		var player_name = GameManager.players[i].name
 		var currentPlayer: Wizard = PlayerScene.instantiate()
+		
+		currentPlayer.player_name = player_name
+		currentPlayer.player_id = player_id
 		
 		save_original_collision_state(currentPlayer)
 

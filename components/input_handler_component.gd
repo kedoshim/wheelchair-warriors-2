@@ -34,7 +34,7 @@ func _process(delta):
 		_read_jump(delta)
 	if shooting_enabled:
 		_read_attacks()
-	_read_aim()
+	_read_aim() 
 	_read_pause()
 
 

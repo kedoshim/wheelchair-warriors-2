@@ -23,6 +23,8 @@ const MAX_FALL_SPEED := 900
 @onready var inventory: Inventory = $Inventory
 @onready var health: HealthComponent = $Health
 
+@onready var healthbar: ProgressBar = $UI/LifeBar
+@onready var nametag: Label = $UI/Name
 
 
 # ---------------------------------------------------------
@@ -59,6 +61,9 @@ var facing := 1
 var syncPos: Vector2
 var syncRot := 0.0
 
+var player_name: String = "PlayerName"
+var player_id: int
+
 
 # =========================================================
 # READY
@@ -82,7 +87,16 @@ func _ready():
 	input.light_pressed.connect(_on_light_pressed)
 	input.heavy_pressed.connect(_on_heavy_pressed)
 	input.pause_pressed.connect(_on_pause)
+	
+	if health:
+		health.health_changed.connect(_on_health_changed)
+		
+		if healthbar:
+			healthbar.max_value = health.max_health
+			healthbar.value = health.max_health
 
+	if nametag:
+		nametag.text = player_name if player_name!="" else str("Player ",player_id)
 
 # ---------------------------------------------------------
 # EVENTOS DE INPUT
@@ -262,3 +276,11 @@ func handle_animations():
 		anim.play("run")
 	else:
 		anim.play("idle")
+		
+# ===========
+# Vida
+#==========
+
+func _on_health_changed(value):
+	if healthbar:
+		healthbar.value = value
