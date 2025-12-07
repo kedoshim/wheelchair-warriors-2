@@ -12,7 +12,7 @@ var players := {}        # [player_id] = Player instance vivo
 var dead_players := {}   # [player_id] = true só para controle
 
 func _ready() -> void:
-	print_debug("[WORLD] _ready called")
+	print("[WORLD] _ready called")
 
 	default_camera.enabled = false
 	spawn_points = get_tree().get_nodes_in_group("PlayerSpawnPoint")
@@ -28,7 +28,7 @@ func _ready() -> void:
 		var player_id = GameManager.players[i].id
 		var currentPlayer: Wizard = PlayerScene.instantiate()
 
-		print_debug("[WORLD] Spawning player ", player_id)
+		print("[WORLD] Spawning player ", player_id)
 
 		players[player_id] = currentPlayer
 		currentPlayer.name = str(player_id)
@@ -46,7 +46,7 @@ func _ready() -> void:
 
 		# este é o jogador local?
 		if player_id == multiplayer.get_unique_id():
-			print_debug("[WORLD] Found local player ", player_id)
+			print("[WORLD] Found local player ", player_id)
 
 			currentPlayer.add_child(camera)
 			currentPlayer.camera = camera
@@ -66,23 +66,27 @@ func _ready() -> void:
 #  PLAYER DEATH
 # =================================================================
 func handle_player_death(player_id: int):
-	print_debug("[WORLD] handle_player_death CALLED for ", player_id)
+	print("[WORLD] handle_player_death CALLED for ", player_id)
 
 	if not players.has(player_id):
-		print_debug("[WORLD ERROR] Player not found in dictionary")
+		print("[WORLD ERROR] Player not found in dictionary")
 		return
 
 	var player : Wizard = players[player_id]
 	dead_players[player_id] = true
 
 	# REMOVENDO PLAYER DA CENA
+	print_debug("[", multiplayer.get_unique_id(),"] freeing ", player_id)
 	player.queue_free()
 	players.erase(player_id)
+	
+	# avisar TODOS os clientes que esse player morreu
+	rpc("client_notify_death", player_id)
 
 	# SE FOR O CLIENTE LOCAL:
 	if player_id == multiplayer.get_unique_id():
 
-		print_debug("[WORLD] LOCAL PLAYER DIED")
+		print("[HOST] LOCAL PLAYER DIED")
 
 		# desliga câmera de jogo
 		default_camera.enabled = true
@@ -92,19 +96,57 @@ func handle_player_death(player_id: int):
 		respawn_ui.respawn_pressed.connect(on_respawn_button_pressed)
 
 	else:
-		print_debug("[WORLD] Remote player ", player_id, " died")
+		print("[WORLD] Remote player ", player_id, " died")
+		
+		
+func client_handle_player_death(player_id: int):
+	print("[CLIENT ", multiplayer.get_unique_id(),"] client_handle_player_death CALLED for ", player_id)
+
+	if (not players.has(player_id)) or players[player_id]==null:
+		print("[CLIENT ERROR] Player not found in dictionary")
+		return
+
+	var player : Wizard = players[player_id]
+	dead_players[player_id] = true
+
+	# REMOVENDO PLAYER DA CENA
+	print_debug("[", multiplayer.get_unique_id(),"] freeing ", player_id)
+	player.queue_free()
+	players.erase(player_id)
+
+	# SE FOR O CLIENTE LOCAL:
+	if player_id == multiplayer.get_unique_id():
+
+		print("[CLIENT ", multiplayer.get_unique_id(),"] LOCAL PLAYER DIED")
+
+		# desliga câmera de jogo
+		default_camera.enabled = true
+
+		# mostra respawn UI
+		respawn_ui.visible = true
+		respawn_ui.respawn_pressed.connect(on_respawn_button_pressed)
+
+	else:
+		print("[CLIENT] Remote player ", player_id, " died")
+
+@rpc("any_peer")
+func client_notify_death(player_id):
+	print("[CLIENT ", multiplayer.get_unique_id(),"] Received death event for ", player_id)
+
+	client_handle_player_death(player_id)
+
 
 
 # =================================================================
 #  CLIENT → SERVER: respawn request
 # =================================================================
 func on_respawn_button_pressed():
-	print_debug("[WORLD] Respawn button pressed by local player")
+	print("[WORLD] Respawn button pressed by local player")
 
 	respawn_ui.visible = false
 
 	var local_id = multiplayer.get_unique_id()
-	print_debug("[WORLD] Requesting server_respawn for id ", local_id)
+	print("[WORLD] Requesting server_respawn for id ", local_id)
 	rpc_id(1, "server_respawn", local_id)
 
 
@@ -113,16 +155,16 @@ func on_respawn_button_pressed():
 # =================================================================
 @rpc("any_peer", "call_local")
 func server_respawn(player_id: int):
-	print_debug("[SERVER] server_respawn CALLED for ", player_id)
+	print("[SERVER] server_respawn CALLED for ", player_id)
 
 	if not multiplayer.is_server():
-		print_debug("[SERVER] Rejecting respawn, not server")
+		print("[SERVER] Rejecting respawn, not server")
 		return
 
 	# criar novo player
 	var new_player: Wizard = PlayerScene.instantiate()
 	new_player.name = str(player_id)
-	print_debug("[SERVER] Instantiating new player node")
+	print("[SERVER] Instantiating new player node")
 
 	players[player_id] = new_player
 
@@ -140,7 +182,7 @@ func server_respawn(player_id: int):
 		if cam:
 			cam.enabled = true
 		else:
-			print_debug("[CLIENT ", multiplayer.get_unique_id(),"] Camera not found")
+			print("[CLIENT ", multiplayer.get_unique_id(),"] Camera not found")
 			var camera = Camera2D.new()
 			camera.name = "GameplayCamera"
 			camera.zoom = Vector2(2.71, 2.71)
@@ -159,7 +201,7 @@ func server_respawn(player_id: int):
 	dead_players.erase(player_id)
 	
 
-	print_debug("[SERVER] Respawn ready. Sending client_on_respawn to ", player_id)
+	print("[SERVER] Respawn ready. Sending client_on_respawn to ", player_id)
 
 	# avisar o cliente
 	rpc("client_on_respawn", sp.global_position, player_id)
@@ -170,16 +212,12 @@ func server_respawn(player_id: int):
 # =================================================================
 @rpc("any_peer")
 func client_on_respawn(spawn_pos: Vector2, player_id: int):
-	print_debug("[CLIENT ", multiplayer.get_unique_id(),"] client_on_respawn CALLED for ", player_id)
-
-	if not players.has(player_id):
-		print_debug("[CLIENT ERROR] Player not found for respawn")
-		return
+	print("[CLIENT ", multiplayer.get_unique_id(),"] client_on_respawn CALLED for ", player_id)
 		
 	# criar novo player
 	var new_player: Wizard = PlayerScene.instantiate()
 	new_player.name = str(player_id)
-	print_debug("[CLIENT ", multiplayer.get_unique_id(),"] Instantiating new player node on ", spawn_pos)
+	print("[CLIENT ", multiplayer.get_unique_id(),"] Instantiating new player node on ", spawn_pos)
 
 	players[player_id] = new_player
 	
@@ -196,7 +234,7 @@ func client_on_respawn(spawn_pos: Vector2, player_id: int):
 		if cam:
 			cam.enabled = true
 		else:
-			print_debug("[CLIENT ", multiplayer.get_unique_id(),"] Camera not found")
+			print("[CLIENT ", multiplayer.get_unique_id(),"] Camera not found")
 			var camera = Camera2D.new()
 			camera.name = "GameplayCamera"
 			camera.zoom = Vector2(2.71, 2.71)
@@ -207,4 +245,4 @@ func client_on_respawn(spawn_pos: Vector2, player_id: int):
 		
 	add_child(new_player)
 
-	print_debug("[CLIENT ", multiplayer.get_unique_id(),"] Respawn complete")
+	print("[CLIENT ", multiplayer.get_unique_id(),"] Respawn complete")

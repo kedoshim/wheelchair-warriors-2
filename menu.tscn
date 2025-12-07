@@ -10,8 +10,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lti8b")
-address = null
-port = null
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 131.0
+offset_right = 130.0
+offset_bottom = 171.0
 
 [node name="Host" type="Button" parent="."]
 layout_mode = 0
@@ -31,10 +36,10 @@ text = "Join"
 
 [node name="StartGame" type="Button" parent="."]
 layout_mode = 0
-offset_left = 565.0
-offset_top = 134.0
-offset_right = 794.0
-offset_bottom = 225.0
+offset_left = 564.0
+offset_top = 131.0
+offset_right = 793.0
+offset_bottom = 222.0
 text = "Start Game"
 
 [node name="LineEdit" type="LineEdit" parent="."]
