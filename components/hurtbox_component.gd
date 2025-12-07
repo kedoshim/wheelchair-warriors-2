@@ -48,7 +48,7 @@ func _on_area_entered(hitbox: Area2D) -> void:
 			healthComponent.take_damage(hitbox_component.damage)
 		
 	if hitbox is HitboxComponent:
-		var hitbox_owner = hitbox.get_parent()
+		var _hitbox_owner = hitbox.get_parent()
 			
 		if healthComponent:
 			healthComponent.take_damage(hitbox.damage)

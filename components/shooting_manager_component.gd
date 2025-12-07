@@ -82,7 +82,7 @@ func _server_use_power(attack_type, origin_pos, target_pos):
 		else power.get_heavy_attack(user, origin_pos, target_pos)
 	)
 
-	_execute_actions(actions, attack_type)
+	_execute_actions(actions)
 
 	# Replica visualmente/funcionalmente para todos os clientes
 	rpc("client_replicate_action", attack_type, origin_pos, target_pos)
@@ -115,14 +115,14 @@ func client_replicate_action(attack_type: String, origin_pos: Vector2, target_po
 		else power.get_heavy_attack(user, origin_pos, target_pos)
 	)
 
-	_execute_actions(actions, attack_type)
+	_execute_actions(actions)
 
 
 # ============================================================
 # ACTION EXECUTION
 # ============================================================
 
-func _execute_actions(actions, attack_type: String):
+func _execute_actions(actions):
 	if actions == null:
 		return
 

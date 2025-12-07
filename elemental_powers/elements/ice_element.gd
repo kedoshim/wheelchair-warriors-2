@@ -21,7 +21,7 @@ func get_light_attack(user: Wizard, origin: Vector2, target: Vector2):
 # --------------------------------------------
 # HEAVY ATTACK → Frost Nova
 # --------------------------------------------
-func get_heavy_attack(user: Wizard, origin: Vector2, target: Vector2):
+func get_heavy_attack(user: Wizard, _origin: Vector2, _target: Vector2):
 	var nova := nova_scene.instantiate()
 	nova.global_position = user.global_position
 
@@ -35,5 +35,5 @@ func get_heavy_attack(user: Wizard, origin: Vector2, target: Vector2):
 # --------------------------------------------
 # PASSIVE → Ice reduces cooldown slightly
 # --------------------------------------------
-func get_passive(user):
+func get_passive(_user):
 	return []  # add slow resist, freeze bonus, etc.

@@ -96,7 +96,8 @@ func play_death_animation() -> void:
 		death_animation.play("death")
 		disable_interactions()
 	else:
-		get_parent().queue_free()
+		#get_parent().queue_free()
+		disable_interactions()
 
 
 func disable_interactions() -> void:

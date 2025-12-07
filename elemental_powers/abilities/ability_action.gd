@@ -1,5 +1,5 @@
 extends Resource
 class_name AbilityAction
 
-func execute(shooting_component):
+func execute(_shooting_component):
 	pass

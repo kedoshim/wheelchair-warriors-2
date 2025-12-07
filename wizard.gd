@@ -42,6 +42,8 @@ const MAX_FALL_SPEED := 900
 # ---------------------------------------------------------
 @export var spawn_invulnerability_time := 2.0 # seconds
 
+var can_move: bool = true
+var can_shoot: bool = true
 var is_invulnerable := false
 @onready var invul_timer: Timer = $InvulnerabilityTimer
 
@@ -105,7 +107,7 @@ func _on_pause():
 func _physics_process(delta: float) -> void:
 
 	if $MultiplayerSynchronizer.get_multiplayer_authority() == multiplayer.get_unique_id():
-
+		
 		handle_aim()
 		handle_gravity(delta)
 		handle_platform_drop()
@@ -175,7 +177,8 @@ func wall_jump():
 # =========================================================
 # MOVIMENTO
 # =========================================================
-func handle_movement(delta):
+func handle_movement(_delta):
+		
 	var direction := input.move_dir
 
 	# FLIP

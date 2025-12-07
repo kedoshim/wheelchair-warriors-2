@@ -36,6 +36,6 @@ func get_heavy_attack(user: Wizard, origin: Vector2, target: Vector2):
 # --------------------------------------------
 # PASSIVE → Fire-based attacks ignite enemies
 # --------------------------------------------
-func get_passive(user):
+func get_passive(_user):
 	# You can add a passive effect object later
 	return []

@@ -88,7 +88,7 @@ func _physics_process(delta):
 		# result keys: "position", "normal", "collider", "rid", "shape"
 		var collision_point: Vector2 = result.get("position")
 		var collision_normal: Vector2 = result.get("normal")
-		var collider = result.get("collider")
+		var _collider = result.get("collider")
 
 		if collision_normal and collision_point:
 			# ricochet logic (same as before)

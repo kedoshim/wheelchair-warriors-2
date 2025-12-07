@@ -17,6 +17,8 @@ var jump_timer := 0.0
 var using_controller := false
 
 @export var active := true
+@export var movement_enabled := true
+@export var shooting_enabled := true
 
 
 func _ready():
@@ -27,11 +29,13 @@ func _process(delta):
 	if not active:
 		return
 	
-	_read_movement()
-	_read_jump(delta)
-	_read_attacks()
-	_read_pause()
+	if movement_enabled:
+		_read_movement()
+		_read_jump(delta)
+	if shooting_enabled:
+		_read_attacks()
 	_read_aim()
+	_read_pause()
 
 
 # ---------------------------------------------------------

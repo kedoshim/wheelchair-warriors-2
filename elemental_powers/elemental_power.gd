@@ -8,13 +8,13 @@ class_name ElementalPower
 #   OVERRIDABLE INTERFACE
 # -------------------------------------------------------
 
-func get_light_attack(user: Wizard, origin: Vector2, target: Vector2) -> Array:
+func get_light_attack(_user: Wizard, _origin: Vector2, _target: Vector2) -> Array:
 	return []   # Override in subclasses
 
-func get_heavy_attack(user: Wizard, origin: Vector2, target: Vector2) -> Array:
+func get_heavy_attack(_user: Wizard, _origin: Vector2, _target: Vector2) -> Array:
 	return []   # Override in subclasses
 
-func get_passive(user):
+func get_passive(_user):
 	return []   # Optional return of AbilityActions
 
 
@@ -54,7 +54,7 @@ func create_cone_action(
 	projectile_scene: PackedScene,
 	cone_angle_degrees := 45.0,
 	count := 5,
-	range := 1000.0
+	max_range := 1000.0
 ):
 	var projectiles: Array = []
 
@@ -69,7 +69,7 @@ func create_cone_action(
 	for i in range(count):
 		var offset := start + step * i
 		var dir := base.rotated(offset)
-		var proj_target := origin + dir * range
+		var proj_target := origin + dir * max_range
 
 		projectiles.append(
 			_create_basic_projectille(user, origin, proj_target, projectile_scene)
