@@ -14,5 +14,5 @@ async function _createClient() {
     return client;
 }
 
-export const client = _createClient()
+export const client = await _createClient()
 
